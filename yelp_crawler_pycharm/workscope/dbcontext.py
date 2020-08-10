@@ -1,6 +1,8 @@
 import mysql.connector
 from mysql.connector import Error
 
+from log import yelp_log
+
 
 class YelpContext:
 
@@ -22,12 +24,11 @@ class YelpContext:
                 print("You're connected to database: ", record)
 
         except Error as e:
-            print("Error while connecting to MySQL", e)
+            yelp_log.logger.error(f'Error while connect MySQL: {e}')
 
     def disconnect(self):
         if (self.connection.is_connected()):
             self.disconnect()
-            print('MySQL connection is closed')
 
 
 class Reponsitory:
@@ -65,6 +66,7 @@ class Reponsitory:
             return True
         except mysql.connector.Error as error :
             print(f'Failed to insert record to database. {error}')
+            yelp_log.logger.error(f'Failed to insert record to database. {error}')
             self.dbcontext.connection.rollback()
             return False
 

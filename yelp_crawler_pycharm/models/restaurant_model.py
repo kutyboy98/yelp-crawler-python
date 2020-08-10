@@ -1,10 +1,15 @@
 from models import base_model
 
+from log import yelp_log
 
 class Restaurant(base_model.Base):
 
+    # You will see the rule of each restaurant list like that with first param is category label,
+    # second param is region and last param is item position
     Search_Url = 'https://www.yelp.com/search?cflt={0}&find_loc={1}&start={2}'
+    # Class name of div tag where it save each restaurant information
     Container_Class_Name = 'lemon--li__373c0__1r9wz border-color--default__373c0__3-ifU'
+    # Some class name relate with the restaurant information
     Element_Detail = {
         'link': 'link__373c0__1G70M',
         'img': 'photoHeader__373c0__YdvQE',
@@ -17,6 +22,14 @@ class Restaurant(base_model.Base):
     }
 
     def search_restaurants(self,category_id, category, region, start):
+        '''
+        This method result the list of restaurant
+        :param category_id:
+        :param category:
+        :param region:
+        :param start:
+        :return:
+        '''
         result = []
         url = self.Search_Url.replace('{0}', category) \
             .replace('{1}', region) \
@@ -48,6 +61,11 @@ class Restaurant(base_model.Base):
         return result
 
     def get_restaurant_detail(self, url):
+        '''
+        This method come to the restaurant detail page and result some restaurant information
+        :param url:
+        :return:
+        '''
         result = {'address': '', 'imgs': '', 'services': ''}
         soup = self.get_content(url)
         if soup:

@@ -2,6 +2,8 @@ import requests as rq
 
 from bs4 import BeautifulSoup as bs
 
+from log import yelp_log
+
 
 class Base:
 
@@ -12,17 +14,22 @@ class Base:
         soup = None
         while True:
             try:
+                # Get page source
                 html_source = rq.get(url)
+                # Exchange html source to text
                 plain_text = html_source.text
                 if len(plain_text) > 0:
                     soup = bs(plain_text)
+                    # Get denied page
                     denied_element = soup.find('div', {'class': self.Denied_Class_Name})
+                    # Check denied
                     if denied_element:
-                        print(f'{denied_element.find("h2").string} You have to refake ip.')
+                        print(f'{denied_element.find("h2").string} You have to refake your ip.')
+                        yelp_log.logger.warning(f'{denied_element.find("h2").string} You have to refake your ip.')
                     else:
                         break
             except ValueError:
-                print(ValueError)
+                yelp_log.logger.error(ValueError)
             finally:
                 if soup:
                     break

@@ -3,13 +3,23 @@ import json
 import pandas as pd
 from datetime import datetime
 
+from log import yelp_log
+
 from models import base_model
 
 class Review(base_model.Base):
 
+    # You will found the api to get review information with first param is url of restaurant detail page
+    # second param is review position
     Base_Api = '{0}/review_feed?rl=en&sort_by=relevance_desc&q=&start={1}'
 
     def get_reviews(self, restaurant_url, start):
+        '''
+        This method will get 'start' review information of the restaurant
+        :param restaurant_url:
+        :param start:
+        :return:
+        '''
         result = []
         api = self.Base_Api\
                         .replace('{0}', restaurant_url)\
